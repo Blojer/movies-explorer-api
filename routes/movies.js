@@ -1,8 +1,13 @@
 const moviesRoutes = require('express').Router();
 const {
-  getMoviesUser, createMovie, deleteMovie,
+  getMoviesUser,
+  createMovie,
+  deleteMovie,
 } = require('../controllers/movies');
-const { validateCreateMovie, validateDeleteMovie } = require('../middlewares/validation');
+const {
+  validateCreateMovie,
+  validateDeleteMovie,
+} = require('../middlewares/validation');
 
 moviesRoutes.get('/', getMoviesUser);
 

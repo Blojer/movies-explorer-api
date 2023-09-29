@@ -36,9 +36,10 @@ function createMovie(req, res, next) {
     thumbnail,
     movieId,
     owner: req.user._id,
-  }).then((movie) => {
-    res.status(200).send(movie);
   })
+    .then((movie) => {
+      res.status(200).send(movie);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Передача некоректых данных'));
