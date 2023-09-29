@@ -79,9 +79,9 @@ function login(req, res, next) {
       );
 
       res.cookie('token', token, {
-        maxAge: 3600000,
+        maxAge: 360000000,
         httpOnly: true,
-        sameSite: none,
+        sameSite: true,
       });
       return res.send(user.toJSON());
     })
