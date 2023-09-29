@@ -14,7 +14,12 @@ const { PORT = 3000, DB_CONN = 'mongodb://127.0.0.1:27017/bitfilmsdb' } =
 const app = express();
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://kinoblojer.nomoredomainsicu.ru',
+      'https://kinoblojer.nomoredomainsicu.ru',
+    ],
     credentials: true,
   })
 );
