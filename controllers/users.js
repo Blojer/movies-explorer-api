@@ -14,17 +14,23 @@ function getUserInfo(req, res, next) {
 }
 
 function createUser(req, res, next) {
-  const {
-    name, email, password,
-  } = req.body;
+  const { name, email, password } = req.body;
 
-  bcrypt.hash(password, 10).then((hash) => User.create({
-    name, email, password: hash,
-  }))
-    .then((user) => res.status(201).send({
-      name: user.name,
-      email: user.email,
-    }))
+  bcrypt
+    .hash(password, 10)
+    .then((hash) =>
+      User.create({
+        name,
+        email,
+        password: hash,
+      })
+    )
+    .then((user) =>
+      res.status(201).send({
+        name: user.name,
+        email: user.email,
+      })
+    )
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Передача некоректых данных'));
@@ -38,11 +44,15 @@ function createUser(req, res, next) {
 
 function updateUser(req, res, next) {
   const { email, name } = req.body;
-  User.findByIdAndUpdate(req.user._id, { email, name }, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true, // данные будут валидированы перед изменением
-    upsert: true, // если пользователь не найден, он будет создан
-  })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { email, name },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true, // если пользователь не найден, он будет создан
+    }
+  )
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -60,12 +70,17 @@ function updateUser(req, res, next) {
 function login(req, res, next) {
   const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password).then((user) => {
-    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' }
+      );
 
-    res.cookie('token', token, { maxAge: 3600000, httpOnly: true, sameSite: true });
-    return res.send(user.toJSON());
-  })
+      res.cookie('token', token, { maxAge: 3600000, httpOnly: true });
+      return res.send(user.toJSON());
+    })
     .catch(next);
 }
 
