@@ -78,7 +78,11 @@ function login(req, res, next) {
         { expiresIn: '7d' }
       );
 
-      res.cookie('token', token, { maxAge: 3600000, httpOnly: true });
+      res.cookie('token', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+        sameSite: none,
+      });
       return res.send(user.toJSON());
     })
     .catch(next);
