@@ -16,7 +16,6 @@ app.use(
   cors({
     origin: ['http://localhost:3001', 'kinoblojer.nomoredomainsicu.ru'],
     credentials: true,
-    maxAge: 60,
   })
 );
 app.use(express.json());
